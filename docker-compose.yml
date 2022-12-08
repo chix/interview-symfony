@@ -1,0 +1,47 @@
+version: '3.4'
+services:
+  keycloak_db:
+    container_name: keycloak_db
+    image: mariadb:10.8.2
+    environment:
+      - MYSQL_ROOT_PASSWORD=ROOT
+      - MYSQL_DATABASE=keycloak
+    volumes:
+      - './docker-compose/keycloak/data:/var/lib/mysql'
+  
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:latest
+    ports:
+      - "8080:8080"
+      - "8787:8787"
+    command:
+      - start-dev
+    environment:
+      DB_VENDOR: mariadb
+      DB_ADDR: keycloak_db
+      DB_DATABASE: keycloak
+      DB_USER: root
+      DB_PASSWORD: ROOT
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ADMIN
+      KEYCLOAK_USER: user
+      KEYCLOAK_PASSWORD: USER
+      PROXY_ADDRESS_FORWARDING: "true"
+    depends_on:
+      - keycloak_db
+
+  keycloak-config-cli:
+    container_name: keycloak_config
+    image: adorsys/keycloak-config-cli:latest
+    volumes:
+      - ./docker-compose/keycloak/config:/config
+    environment:
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=ADMIN
+      - KEYCLOAK_AVAILABILITYCHECK_ENABLED=true
+      - SPRING_PROFILES_ACTIVE=dev
+      - IMPORT_CACHE_ENABLED=false
+    depends_on:
+      - keycloak

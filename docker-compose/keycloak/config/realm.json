@@ -1,0 +1,32 @@
+{
+  "id": "myrealm",
+  "realm": "myrealm",
+  "displayName": "My Realm",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "test-client-id",
+      "name": "test-client",
+      "description": "Test Client",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "directAccessGrantsEnabled": true,
+      "publicClient": true
+    }
+  ],
+  "users": [
+    {
+      "username": "john.doe@example.com",
+      "email": "john.doe@example.com",
+      "enabled": true,
+      "firstName": "John",
+      "lastName": "Doe",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password"
+        }
+      ]
+    }
+  ]
+}
